@@ -1,4 +1,7 @@
 # Git will ignore the following files
+# use this slash direction /
+# paths are local to the .gitignore file
+# no need a ./
 
 dataset/CrowdFlow/images/
 dataset/CrowdFlow/density/
