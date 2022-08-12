@@ -1,0 +1,5 @@
+# Git will ignore the following files
+
+./dataset/CrowdFlow/images/
+./dataset/CrowdFlow/density/
+./dataset/CrowdFlow/mask/
