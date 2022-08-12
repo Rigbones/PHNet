@@ -4,10 +4,9 @@ from torch._C import device
 from model import PHNet
 from utils import save_checkpoint
 
-import matplotlib.pyplot as plt
-
 import torch
 import torch.nn as nn
+# import matplotlib.pyplot as plt
 from torchvision import transforms
 import argparse
 import json
@@ -16,11 +15,15 @@ import time
 
 parser = argparse.ArgumentParser(description='PyTorch PHNet')
 
+TRAIN_JSON_PATH = "./jsons/CrowdFlow_train_10_frames.json"
+TEST_JSON_PATH = "./jsons/CrowdFlow_test_10_frames.json"
+FUN_PATH = "./results/CrowdFlow_results" # not fun
+
 # two dashes -- means not necessary argument
-parser.add_argument('--train_json', metavar='TRAIN', help='path to train json', default="./jsons/train10.json")
-parser.add_argument('--test_json', metavar='TEST', help='path to test json', default="./jsons/test10.json")
+parser.add_argument('--train_json', metavar='TRAIN', help='path to train json', default=TRAIN_JSON_PATH)
+parser.add_argument('--test_json', metavar='TEST', help='path to test json', default=TEST_JSON_PATH)
 parser.add_argument('--pre', '-p', metavar='PRETRAINED', default=None, type=str, help='path to the pretrained model')
-parser.add_argument('--batch_size', '-bs', metavar='BATCHSIZE' , type=int, help='batch size', default=30)
+parser.add_argument('--batch_size', '-bs', metavar='BATCHSIZE' , type=int, help='batch size', default=10)
 parser.add_argument('--gpu',metavar='GPU', type=str, help='GPU id to use.', default="5")
 parser.add_argument('--task',metavar='TASK', type=str, help='task id to use.', default="1")
 parser.add_argument('--gt_code', metavar='GT_NUMBER' ,type=str, help='ground truth dataset number', default='4896')
@@ -45,7 +48,7 @@ def main():
     args.momentum      = 0.95
     args.decay         = 5*1e-4
     args.start_epoch   = 0
-    args.epochs = 1 # changed by me
+    args.epochs = 20 # changed by me
     args.steps         = [-1,1,100,150]
     args.scales        = [1,1,1,1]
 
@@ -216,6 +219,15 @@ class FullModel(nn.Module):
 
     def forward(self, targets, *inputs):
         outputs = self.model(inputs[0])
+        # for i in range(0, args.batch_size):
+        #     path = FUN_PATH + f'/' + str(i) + '.png'
+        #     hehe = torch.stack([outputs[i, 0], outputs[i, 0], outputs[i, 0]], dim=-1)
+        #     min = torch.min(hehe)
+        #     max = torch.max(hehe)
+        #     hehe = (hehe-min)/(max-min) * 255
+        #     hehe = hehe.to(torch.uint8)
+
+        #     plt.imsave(path, hehe.detach().numpy())
         loss = self.loss(outputs, targets)
         return torch.unsqueeze(loss,0),outputs
 
