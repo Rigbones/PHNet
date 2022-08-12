@@ -6,3 +6,9 @@
 dataset/CrowdFlow/images/
 dataset/CrowdFlow/density/
 dataset/CrowdFlow/mask/
+
+dataset/Venice/images/
+dataset/Venice/density/
+dataset/Venice/mask/
+
+dataset/Venice/ground-truth/
