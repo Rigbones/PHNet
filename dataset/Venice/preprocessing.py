@@ -8,20 +8,20 @@ import json # used when writing to the json file
 from fancy_progress_bar import Printer # a more sexy progress bar that has some bugs
 
 # Run this program in folder "PHNet_pytorch".
-# Use the command "python ./datasets/CrowdFlow/preprocessing.py"
+# Use the command "python ./datasets/Venice/preprocessing.py"
 
-DATASET_NAME = "CrowdFlow"
+DATASET_NAME = "Venice"
 NUM_FRAMES = 10
 MULTIPLY_MASK = False # If you have a mask and wish to multiply it, set to True
 
-GROUND_TRUTH_DENSITY_PATH = './dataset/CrowdFlow/density' # ground truth density map dataset location, each map is in npy format
-PROCESSED_DENSITY_PATH = './dataset/CrowdFlow/processed_density' # where to place the density maps multiplied by the mask, each map is in npy format
-MASK_PATH = './dataset/CrowdFlow/mask' # mask matrix location, each map is in png format
-IMAGES_PATH = './dataset/CrowdFlow/images' # where the training and testing png images are, each picture is in png format
-PROCESSED_IMAGES_PATH = './dataset/CrowdFlow/processed_images' # where to place the images multiplied by the mask, each image is in png format
-EXPORT_FRAMES_PATH = f'./dataset/CrowdFlow/{DATASET_NAME}_{NUM_FRAMES}_frames' + ('_mask' if MULTIPLY_MASK else '_no_mask') # where chronological frames are placed in one folder
+GROUND_TRUTH_DENSITY_PATH = './dataset/Venice/density' # ground truth density map dataset location, each map is in npy format
+PROCESSED_DENSITY_PATH = './dataset/Venice/processed_density' # where to place the density maps multiplied by the mask, each map is in npy format
+MASK_PATH = './dataset/Venice/mask' # mask matrix location, each map is in png format
+IMAGES_PATH = './dataset/Venice/images' # where the training and testing png images are, each picture is in png format
+PROCESSED_IMAGES_PATH = './dataset/Venice/processed_images' # where to place the images multiplied by the mask, each image is in png format
+EXPORT_FRAMES_PATH = f'./dataset/Venice/{DATASET_NAME}_{NUM_FRAMES}_frames' + ('_mask' if MULTIPLY_MASK else '_no_mask') # where chronological frames are placed in one folder
 
-# EXPORT_FRAMES_PATH would be sth like: './dataset/CrowdFlow/CrowdFlow_10_frames_mask' or './dataset/CrowdFlow/CrowdFlow_10_frames_no_mask'
+# EXPORT_FRAMES_PATH would be sth like: './dataset/Venice/Venice_10_frames_mask' or './dataset/Venice/Venice_10_frames_no_mask'
 
 def searchFile(pathname, filename):
     # searches the path (and all its subfolders) for files ending with a certain extension
@@ -50,20 +50,20 @@ def mycopyfile(srcfile, dstfile):
 
 # searches the folder "density"
 # creates a list of length 1600.  Each list_density[i] is a tuple
-# eg list_density[0] is ('./dataset/CrowdFlow/density/IM01', 'IM01_frame_0000.npy')
+# eg list_density[0] is ('./dataset/Venice/density/IM01', 'IM01_frame_0000.npy')
 list_density = searchFile(GROUND_TRUTH_DENSITY_PATH, '(.*).npy')
 list_density.sort()
 
 # searches the folder "mask" if MULTIPLY_MASK is True
 # a list of length 1600.  Each list_mask[i] is a tuple
-# eg list_mask[0] is ('./dataset/CrowdFlow/mask/IM01', 'IM01_frame_0000.png')
+# eg list_mask[0] is ('./dataset/Venice/mask/IM01', 'IM01_frame_0000.png')
 if (MULTIPLY_MASK):
     list_mask = searchFile(MASK_PATH, '(.*).png')
     list_mask.sort()
 
 # searches the folder "images"
 # creates a list of length 1600.  Each list_images[i] is a tuple
-# eg list_images[0] is ('./dataset/CrowdFlow/images/IM01', 'IM01_frame_0000.png')
+# eg list_images[0] is ('./dataset/Venice/images/IM01', 'IM01_frame_0000.png')
 list_images = searchFile(IMAGES_PATH, '(.*).png')
 list_images.sort()
 
@@ -86,16 +86,16 @@ for i in range(0, total_images):
         os.makedirs(PROCESSED_DENSITY_PATH)
 
     # Get the destination path for an processed density map (processed means multiplied by mask)
-    # destination_density_path looks sth like: "./dataset/CrowdFlow/processed_density/IM01_frame_0000.npy"
+    # destination_density_path looks sth like: "./dataset/Venice/processed_density/IM01_frame_0000.npy"
     destination_density_path = os.path.join(PROCESSED_DENSITY_PATH, list_density[i][1])
 
     # Get the source path for an UNprocessed density map (processed means multiplied by mask)
-    # source_density_path looks sth like: "./dataset/CrowdFlow/density/IM01/IM01_frame_0000.npy"
+    # source_density_path looks sth like: "./dataset/Venice/density/IM01/IM01_frame_0000.npy"
     source_density_path = os.path.join(list_density[i][0], list_density[i][1])
     original_density = np.load(source_density_path)
 
     # Get the path for the mask
-    # mask_path looks sth like: "./dataset/CrowdFlow/mask/IM01/IM01_frame_0000.png"
+    # mask_path looks sth like: "./dataset/Venice/mask/IM01/IM01_frame_0000.png"
     if (MULTIPLY_MASK):
         mask_path = os.path.join(list_mask[i][0], list_mask[i][1])
         mask = plt.imread(mask_path)
@@ -129,18 +129,18 @@ for i in range(0, total_images):
         os.makedirs(PROCESSED_IMAGES_PATH)
 
     # Get the path for the img
-    # img_path looks sth like: "./dataset/CrowdFlow/images/IM01/IM01_frame_0000.png"
+    # img_path looks sth like: "./dataset/Venice/images/IM01/IM01_frame_0000.png"
     img_path = os.path.join(list_images[i][0], list_images[i][1])
     img = plt.imread(img_path)
 
     # Get the path for the mask
-    # mask_path looks sth like: "./dataset/CrowdFlow/mask/IM01/IM01_frame_0000.png"
+    # mask_path looks sth like: "./dataset/Venice/mask/IM01/IM01_frame_0000.png"
     if (MULTIPLY_MASK):
         mask_path = os.path.join(list_mask[i][0], list_mask[i][1])
         mask = plt.imread(mask_path)
 
     # Get the path for the processed image
-    # destination_img_path looks sth like: "./dataset/CrowdFlow/processed_images/IM01_frame_0000.png"
+    # destination_img_path looks sth like: "./dataset/Venice/processed_images/IM01_frame_0000.png"
     destination_img_path = os.path.join(PROCESSED_IMAGES_PATH, list_images[i][1])
 
     # Multiply image * mask
@@ -162,7 +162,7 @@ test_json = []
 
 # searches the folder "processed_images"
 # a list of length 1600.  Each processed_images[i] is a tuple
-# eg processed_images[0] is ('./dataset/CrowdFlow/processed_images', 'IM01_frame_0000.png')
+# eg processed_images[0] is ('./dataset/Venice/processed_images', 'IM01_frame_0000.png')
 list_processed_images = searchFile(PROCESSED_IMAGES_PATH, '(.*).png')
 list_processed_images.sort()
 
@@ -177,11 +177,11 @@ for i in range(0, total_images - NUM_FRAMES + 1):
         # frame_num goes from 0, 1, ..., 9
 
         # Get the path for the processed image
-        # processed_img_path looks sth like: './dataset/CrowdFlow/processed_images/IM01_frame_0007.png'
+        # processed_img_path looks sth like: './dataset/Venice/processed_images/IM01_frame_0007.png'
         processed_img_path = os.path.join(list_processed_images[i][0], list_processed_images[i + frame_num][1])
 
         # Get the destination path
-        # destination_path looks sth like: './dataset/CrowdFlow/CrowdFlow_10_frames_mask/IM01_frame_0000/IM01_frame_0007.png'
+        # destination_path looks sth like: './dataset/Venice/Venice_10_frames_mask/IM01_frame_0000/IM01_frame_0007.png'
         destination_path = os.path.join(EXPORT_FRAMES_PATH, list_processed_images[i + NUM_FRAMES - 1][1][:-4], list_processed_images[i + frame_num][1])
         
         # copy the file over
